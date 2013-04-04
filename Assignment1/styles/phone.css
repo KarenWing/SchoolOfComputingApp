@@ -1,0 +1,61 @@
+@charset "utf-8";
+
+.ui-header .ui-title, .ui-footer .ui-title {
+	min-height: 1.1em;
+	text-align: center;
+	font-size: 14px;
+	display: block;
+	margin: .6em 10% .8em;
+	padding: 0 3px 3px 3px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	outline: 0!important
+}
+.ui-btn-inner {
+	font-size: 13px;
+	min-width: 0.75em;
+	display: block;
+	position: relative;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	zoom: 1;
+	padding-top: 0.6em;
+	padding-right: 2px;
+	padding-bottom: 0.6em;
+	padding-left: 40px;
+	
+}
+.ui-li-heading {
+	font-size: 14px;
+	font-weight: bold;
+	display: block;
+	margin: .6em 0;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap
+}
+span.ui-slider-label {
+	position: absolute;
+	text-align: center;
+	width: 100%;
+	overflow: hidden;
+	font-size: 14px;
+	top: 0;
+	line-height: 2;
+	min-height: 100%;
+	border-width: 0;
+	white-space: nowrap
+}
+#mapDiv {
+    width: 75%;
+    height: 400px;
+    margin-top: 10px;
+}
+#map-directions{
+    width: 80%;
+    height: 200px;
+    margin-top: 10px;
+}
+

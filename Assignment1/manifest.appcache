@@ -1,0 +1,22 @@
+CACHE MANIFEST
+
+# 11/12/2012 : version1
+
+CACHE:
+images/UOG.png
+images/ParckCampus.png
+images/Oxstalls.png
+images/FCH.png
+index.html
+styles/jQuery.mobile.css
+styles/phone.css
+styles/ipad.css
+styles/desktop.css
+jquery-mobile-theme-043249-0/themes/MyTheme.min.css
+
+#
+FALLBACK:
+offline.html
+
+NETWORK:
+

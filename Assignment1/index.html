@@ -1,0 +1,822 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" manifest="manifest.appcache">
+<head>
+<meta charset="utf-8">
+
+<!-------MediaQueries-------->
+
+<!--phone-->
+<link rel="stylesheet" type="text/css" href="styles/phone.css" media="only screen and (max-width: 767px)" />
+<!--ipad /Tablet Device-->
+<link rel="stylesheet" href="styles/ipad.css" media="only screen and (min-device-width : 768px) and (max-device-width : 1024px)">
+<!--desktop-->
+<link rel="stylesheet" type="text/css" href="styles/desktop.css" media="screen and (min-width: 1025px)" />
+
+
+<!----viewport---->
+
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="target-densitydpi=device-dpi, width=devicewidth" />
+
+<title>School of Computing App</title>
+
+<!--JavaScript Links -->
+<script type="text/javascript" src="jquery-mobile/jQuery-1.7.2.min.js"></script>
+<script type="text/javascript" src="jquery-mobile/jQuery.mobile-1.2.0.min.js"></script>
+<script type="text/javascript" src="http://www.modernizr.com/downloads/modernizr-latest.js"></script>
+<script src="SpryAssets/SpryCollapsiblePanel.js" type="text/javascript"></script>
+
+
+<!--Stylesheet link-->
+<link rel="stylesheet" type="text/css" href="jquery-mobile-theme-043249-0/themes/MyTheme.min.css">
+
+<link rel="stylesheet" type="text/css" href="styles/jQuery.mobile.css"/>
+
+<link href="SpryAssets/SpryCollapsiblePanel.css" rel="stylesheet" type="text/css">
+
+
+<!--Google Map-->
+<script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.3"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+<!--Geolocation-->
+
+<script>
+if (navigator.geolocation){
+	
+   (function () {
+		var directionsService = new google.maps.DirectionsService(),
+		directionsDisplay = new google.maps.DirectionsRenderer(),
+		createMap = function (start) {
+		var travel = {
+		origin : (start.coords)? new google.maps.LatLng(start.lat, start.lng) : start.address,
+		destination : "51.888571,-2.08913",
+		travelMode : google.maps.DirectionsTravelMode.WALKING
+		},
+		mapOptions = {
+		zoom: 15,
+		// Focus on Park Campus
+		center : new google.maps.LatLng(51.888571,-2.08913),
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+		
+		map = new google.maps.Map(document.getElementById("mapDiv"), mapOptions);
+		directionsDisplay.setMap(map);
+		directionsDisplay.setPanel(document.getElementById("map-directions"));
+		directionsService.route(travel, function(result, status) {
+		if (status === google.maps.DirectionsStatus.OK) {
+		directionsDisplay.setDirections(result);
+		}
+		});
+		};
+		
+		// Check for geolocation support
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function (position) {
+		// Success!
+		createMap({
+		coords : true,
+		lat : position.coords.latitude,
+		lng : position.coords.longitude
+		});
+		},
+	function () {
+		// Gelocation fallback: set it to Park Campus
+		createMap({
+		coords : false,
+		address :  "51.888571,-2.08913"
+		});
+		}
+		);
+		}
+		else {
+		// No geolocation fallback: set it to Park Campus
+		createMap({
+		coords : false,
+		address :  "51.888571,-2.08913"
+		});
+		}
+		})();
+}else {
+alert("Geolocation is not supported by this browser"); 
+	}
+</script>
+
+
+<!--Camara-->
+
+<script type="text/javascript" charset="utf-8" src="cordova-2.2.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+    var pictureSource;   // picture source
+    var destinationType; // sets the format of returned value 
+
+    // Wait for Cordova to connect with the device
+    //
+    document.addEventListener("deviceready",onDeviceReady,false);
+
+    // Cordova is ready to be used!
+    //
+    function onDeviceReady() {
+        pictureSource=navigator.camera.PictureSourceType;
+        destinationType=navigator.camera.DestinationType;
+    }
+
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoDataSuccess(imageData) {
+      // view the image data
+      console.log(imageData);
+
+      // Get image handle
+      //
+      var smallImage = document.getElementById('smallImage');
+
+      // Unhide image elements
+      //
+      smallImage.style.display = 'block';
+
+      // Show the captured photo
+      // The inline CSS rules are used to resize the image
+      //
+      smallImage.src = "data:image/jpeg;base64," + imageData;}
+
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoURISuccess(imageURI) {
+       
+       console.log(imageURI);
+
+      // Get image handle
+      //
+      var largeImage = document.getElementById('largeImage');
+
+      // Unhide image elements
+      //
+      largeImage.style.display = 'block';
+
+      // Show the captured photo
+      // The inline CSS rules are used to resize the image
+      //
+      largeImage.src = imageURI;
+    }
+
+    // A button will call this function
+    //
+    function capturePhoto() {
+      // Take picture using device camera and retrieve image as base64-encoded string
+      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
+        destinationType: destinationType.DATA_URL });
+    }
+
+    // A button will call this function
+    //
+    function capturePhotoEdit() {
+      // Take picture using device camera, allow edit, and retrieve image as base64-encoded string  
+      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20, allowEdit: true,
+        destinationType: destinationType.DATA_URL });
+    }
+
+    // A button will call this function
+    //
+    function getPhoto(source) {
+      // Retrieve image file location from specified source
+      navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50, 
+        destinationType: destinationType.FILE_URI,
+        sourceType: source });
+    }
+
+    // Called if something bad happens.
+    // 
+    function onFail(message) {
+      alert('Failed because: ' + message);
+    }
+	</script>
+   
+
+    
+    <!----Audio---->
+    
+ 	
+	<script type="text/javascript" charset="utf-8" src="cordova-2.3.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+    // Wait for Cordova to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    // Record audio
+    // 
+    function recordAudio() {
+        var src = "myrecording.mp3";
+        var mediaRec = new Media(src, onSuccess, onError);
+
+        // Record audio
+        mediaRec.startRecord();
+
+        // Stop recording after 10 sec
+        var recTime = 0;
+        var recInterval = setInterval(function() {
+            recTime = recTime + 1;
+            setAudioPosition(recTime + " sec");
+            if (recTime >= 10) {
+                clearInterval(recInterval);
+                mediaRec.stopRecord();
+            }
+        }, 1000);
+    }
+
+    // Cordova is ready
+    //
+    function onDeviceReady() {
+        recordAudio();
+    }
+
+    // onSuccess Callback
+    //
+    function onSuccess() {
+        console.log("recordAudio():Audio Success");
+    }
+
+    // onError Callback 
+    //
+    function onError(error) {
+        alert('code: '    + error.code    + '\n' + 
+              'message: ' + error.message + '\n');
+    }
+
+    // Set audio position
+    // 
+    function setAudioPosition(position) {
+        document.getElementById('audio_position').innerHTML = position;
+    }
+
+    </script>   
+    
+    <!--Local Storage--> 
+    <script type="text/javascript" charset="utf-8">
+	function checkStorageSupport(){
+		//localStorage
+		if (!window.localStorage){alert('This browser does not supports localStorage');
+		}else{
+	function first(){
+		//set button to saveAssignment when clicked
+var button = document.getElementById("save");
+button.addEventListener("click", saveAssignment, false);
+display();
+	}
+	function saveAssignment(){
+		var one = document.getElementById("course").value;
+		var two = document.getElementById("date").value;
+		localStorage.setItem(one,two);		
+		display();
+		document.getElementById("course").value="";
+		document.getElementById("date").value="";
+	}
+	function display(){
+		var assignmentList = document.getElementById("list");
+		assignementList.innerHTML = "";
+		for (var x=0;x<localStorage.length;x++){
+			var a = localStorage.key(x);
+			var b = localStorage.getItem(a);
+			assignmentList.innerHTML += "Course: " +a+ "Due Date: "+b+ "<br />";
+		}		
+	}
+	 window.addEventListener('load', first, false);
+		}
+	}
+	</script>    
+    
+</head>
+
+<!--Body-->
+<body>
+
+<!--Home page-->
+
+<div data-role="page" data-theme = "a" id="main">
+  <div data-role="header">
+    <h1>School of Computing</h1>
+  </div>
+  <div data-role="content" data-theme = "a">
+  
+    <ul data-role="listview">
+      <li><a href="#studentInfo">Student Info</a></li>
+      <li><a href="#assignments">Assignments</a></li>
+      <li><a href="#maps">Maps</a></li>
+      <li><a href="#contact">Computing Staff</a></li>
+      <li><a href="#note">Notes</a></li>
+    </ul>
+  </div>
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+<!--Student info page-->
+
+<div data-role="page" id="studentInfo" data-add-back-btn="true" data-theme = "a" >
+  <div data-role="header">
+    <h1>Student Info </h1>
+  </div>
+  <div data-role="content">
+    <ul data-role="listview">
+      <li><a href= "https://infonet.glos.ac.uk/newsandevents/news/default.aspx" data-role="button" data-theme = "a"  rel="external" target = "_blank">News</a></li>
+      <li><a href= "https://infonet.glos.ac.uk/newsandevents/Lists/Events%20Calendar/calendar.aspx" data-role="button" rel="external" target = "_blank">Events</a></li>
+      <li><a href= "http://insight.glos.ac.uk/DEPARTMENTS/SS/Pages/default.aspx" data-role="button" rel="external" target = "_blank">Services</a></li>
+      <li><a href= "http://www.yourstudentsunion.com/" data-role="button" rel="external"target = "_blank" >Student Union</a></li>
+      <li><a href= "https://infonet.glos.ac.uk/student/Pages/default.aspx" data-role="button" rel="external" target = "_blank">University Site</a></li>
+    </ul>
+  </div>
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+<!--Assignments page-->
+
+<div data-role="page" id="assignments" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back" data-theme = "a">
+  <div data-role="header">
+    <h1>Assignments</h1>
+  </div>
+  <div data-role="content">
+    <ul data-role="listview">
+      <li data-role="list-divider" data-inset="true">
+      <li><a href= "#add"> Add Assignments</a></li>
+      <li data-role="list-divider" id="assignmentList"></li>
+      <h2>List of Assignments</h2>
+      <div id ="list">
+      
+      </div>
+      <input type="button" id="clear" value ="Clear All"/>
+    </ul>
+  </div>
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+<!--ADD assignment page-->
+<div data-role="page" id="add" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back"data-theme = "a">
+  <div data-role="header">
+    <h1>Add Assignment</h1>
+  </div>
+  <div data-role="content">
+  
+    <div data-role="fieldcontain">
+      <label for="course">Course:</label>
+      <input type="text" name="course" id="course" value="" />
+    </div>
+    <div data-role="fieldcontain">
+      <label for="date">Due in Date:</label>
+      <input type="date" name="date" id="date" value=""/>
+    </div>
+    <div data-role="fieldcontain">
+      <label for="selectmenu" class="select">Alarm:</label>
+      <select name="selectmenu" id="selectmenu">
+        <option value="option1" selected>None</option>
+        <option value="option2">On the day</option>
+        <option value="option3">The day before</option>
+        <option value="option4">Two days before</option>
+        <option value="option5">Three days before</option>
+        <option value="option6">Four days before</option>
+        <option value="option7">Five days before</option>
+        <option value="option8">Six days before</option>
+        <option value="option9">One week before</option>
+        <option value="option10">One Month before</option>
+      </select>
+    </div>
+    <div data-role="fieldcontain">
+      <label for="selectmenu2" class="select">Another Alarm:</label>
+      <select name="selectmenu2" id="selectmenu2">
+        <option value="option1" selected>None</option>
+        <option value="option2">On the day</option>
+        <option value="option3">The day before</option>
+        <option value="option4">Two days before</option>
+        <option value="option5">Three days before</option>
+        <option value="option6">Four days before</option>
+        <option value="option7">Five days before</option>
+        <option value="option8">Six days before</option>
+        <option value="option9">One week before</option>
+        <option value="option10">One Month before</option>
+      </select>
+    </div>
+    <a href="#assignments">
+    <input type="button" id="save"  onclick="first(); return false;" value ="Sumbit"/>
+     </a>
+    </div>
+  <div data-role="footer" data-position="fixed">
+  <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+<!--Maps page-->
+
+<div data-role="page" id="maps" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back"data-theme = "a">
+  <div data-role="header">
+    <h1>Maps</h1>
+  </div>
+  <div data-role="content">
+    <ul data-role="listview">
+      <li><a href= "#parkCampus">Park Campus</a></li>
+      <li><a href= "#fchCampus">Francis Close Hall Campus</a></li>
+      <li><a href= "#OxstallsCampus">Oxstalls Campus</a></li>
+      <li><a href= "#CurrentLocation">Directions to Park Campus</a></li>
+    </ul>
+  </div>
+  <div data-role="footer" data-position="fixed">
+  <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+<!--Park Campus-->
+
+<div data-role="page" id="parkCampus" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back"data-theme = "a">
+  <div data-role="header">
+    <h1>Park Campus</h1>
+  </div>
+  <div data-role="content"> <img src="images/ParkCampus.png" width="300" height="200" alt="Park Campus">
+    <ul data-role="listview">
+      <li><a href= "http://www.glos.ac.uk/living/virtualtours/Pages/park.aspx" rel="external">Virtual</a></li>
+    </ul>
+  </div>
+  <div data-role="footer" data-position="fixed">
+  <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+<!--FCH Campus-->
+
+<div data-role="page" id="fchCampus" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back"data-theme = "a">
+  <div data-role="header">
+    <h1>Francis Close Hall Campus</h1>
+  </div>
+  <div data-role="content"> <img src="images/FCH.png" width="300" height="200" alt="FrancisCloseHall">
+    <ul data-role="listview">
+      <li><a href= "http://www.glos.ac.uk/living/virtualtours/Pages/fch.aspx" rel="external">Virtual</a></li>
+    </ul>
+  </div>
+  <div data-role="footer" data-position="fixed">
+  <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+<!--Oxstalls Campus-->
+
+<div data-role="page" id="OxstallsCampus" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back"data-theme = "a">
+  <div data-role="header">
+    <h1>Oxstalls Campus</h1>
+  </div>
+  <div data-role="content"> 
+  <img src="images/Oxstalls.png" width="300" height="200" alt="oxstalls" />
+    <ul data-role="listview">
+      <li><a href= "http://www.glos.ac.uk/living/virtualtours/Pages/oxstalls.aspx" data-role="button" rel="external">Virtual</a></li>
+    </ul>
+  </div>
+  <div data-role="footer" data-position="fixed">
+  <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+<!--Location-->
+
+<div data-role="page" id="CurrentLocation" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back" data-theme = "a">
+  <div data-role="header">
+    <h1>Directions to Park Campus</h1>
+  </div>
+  <div data-role="content">
+    <h2> Your current location to Park Campus to displyed below.</h2>
+    <div id="mapDiv" ></div>
+    <div id="map-directions" ></div>
+  </div>
+  <div data-role="footer" data-position="fixed">
+  <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+<!--contacts page-->
+
+<div data-role="page" id="contact" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back" data-theme = "a">
+<div data-role="header">
+  <h1>Staff Emails</h1>
+</div>
+<div data-role="content">
+<ul data-role="listview" data-filter= "true">
+<li>
+<div id="CollapsiblePanel1" class="CollapsiblePanel">
+  <div class="CollapsiblePanelTab" tabindex="0">David Johnston</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:djohnston@glos.ac.uk">djohnston@glos.ac.uk</a></div>
+</div>
+</li>
+<li>
+<div id="CollapsiblePanel2" class="CollapsiblePanel">
+  <div class="CollapsiblePanelTab" tabindex="0">Nina Reeves</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:nreeves@glos.ac.uk">nreeves@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel3" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">Ambikesh Jayal</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:ajayal@glos.ac.uk">ajayal@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel4" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">Vicky Bush</div>
+    <div class="CollapsiblePanelContent"><a href ="mailto:vbush@glos.ac.uk">vbush@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel5" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">Kevin Walter</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:kwalter@glos.ac.uk">kwalter@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel6" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">David Wakeling</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:dwakeling@glos.ac.uk">dwakeling@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel7" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">Paul O'Brien</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:pobrien@glos.ac.uk">pobrien@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel8" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">David Liewe</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:dliewe@glos.ac.uk">dliewe@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel9" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">Mike Brooks</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:mbrooks@glos.ac.uk">mbrooks@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel10" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">Andrew Tomlinson</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:atomlinson@glos.ac.uk">atomlinson@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel11" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">Julie Paterson</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:jpaterson@glos.ac.uk">jpaterson@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel12" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">Kevin Hapeshi</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:khapeshi@glos.ac.uk">khapeshi@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel13" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">Zayd Junglee</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:khapeshi@glos.ac.uk">khapeshi@glos.ac.uk</a></div>
+  </div>
+  </li>
+  <li>
+  <div id="CollapsiblePanel14" class="CollapsiblePanel">
+    <div class="CollapsiblePanelTab" tabindex="0">Maureen Clutterbuck</div>
+    <div class="CollapsiblePanelContent"><a href="mailto:mclutterbuck@glos.ac.uk">mclutterbuck@glos.ac.uk</a></div>
+  </div>
+  </li>
+  </ul>
+</div>
+<div data-role="footer" id ="footer" data-position="fixed">
+  <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+  <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="160" height="45" alt="University of Gloucestershire" /></a></h4>
+   
+</div>
+</div>
+
+<!--CollapsiblePanel script-->
+<script type="text/javascript">
+var CollapsiblePanel1 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel1", {contentIsOpen:false});
+var CollapsiblePanel2 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel2", {contentIsOpen:false});
+var CollapsiblePanel3 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel3", {contentIsOpen:false});
+var CollapsiblePanel4 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel4", {contentIsOpen:false});
+var CollapsiblePanel5 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel5", {contentIsOpen:false});
+var CollapsiblePanel6 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel6", {contentIsOpen:false});
+var CollapsiblePanel7 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel7", {contentIsOpen:false});
+var CollapsiblePanel8 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel8", {contentIsOpen:false});
+var CollapsiblePanel9 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel9", {contentIsOpen:false});
+var CollapsiblePanel10 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel10", {contentIsOpen:false});
+var CollapsiblePanel11 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel11", {contentIsOpen:false});
+var CollapsiblePanel12 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel12", {contentIsOpen:false});
+var CollapsiblePanel13 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel13", {contentIsOpen:false});
+var CollapsiblePanel14 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel14", {contentIsOpen:false});
+</script>
+
+<!--Notes Page-->
+
+<div data-role="page" id="note" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back"data-theme = "a">
+  <div data-role="header">
+    <h1>Note</h1>
+  </div>
+  <div data-role="content" data-theme = "a">
+    <ul data-role="listview">
+      <li><a href="#wNote">Writen Notes</a></li>
+      <li><a href="#aNote">Audio Notes</a></li>
+      <li><a href="#dNote">Digital Notes</a></li>
+    </ul>
+  </div>
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+<!--Writen Notes-->
+
+<div data-role="page" id="wNote" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back"data-theme = "a">
+<div class="slide offline-storage" id ="web-storage">
+
+          <header>
+          <h1>Written Notes</h1>
+          </header>
+          <p>
+
+            <p id="localstorage-message">Save text value on the client side (crash-safe)</p>
+            <textarea id="ta" placeholder="Type your text here..."></textarea>
+            <button id="save-ta">Save</button>
+            <p id="ta-log"></p>
+            <script defer>
+              (function(){
+
+                try {
+                  (window.localStorage.getItem) // will throw in Firefox under some settings
+                } catch(e){
+                  return; // quit because dom.storage.enabled is false
+                }
+
+                var area = document.querySelector('#ta');
+                // place content from previous edit
+                if (!area.value) {
+                  area.value = window.localStorage.getItem('value');
+                }
+                updateLog(false);
+  
+                // your content will be saved locally
+                document.querySelector('#save-ta').addEventListener('click', function () {
+                  window.localStorage.setItem('value', area.value);
+                  window.localStorage.setItem('timestamp', (new Date()).getTime());
+                  updateLog(true);
+                }, false);
+
+                function updateLog(new_save) {
+                  var log = document.querySelector("#ta-log");
+                  var delta = 0;
+                  if (window.localStorage.getItem('value')) {
+                    delta = ((new Date()).getTime() - (new Date()).setTime(window.localStorage.getItem('timestamp'))) / 1000;
+                    if (new_save) {
+                      log.textContent = 'Saved. Content will be available after browser refresh/reopen.';
+                      setTimeout(function() {
+                        log.textContent = '';
+                      }, 3000);
+                    } else {
+                      log.textContent = 'last saved: ' + delta + 's ago';
+                    }
+                  }
+                }
+
+              })();  
+            </script>
+          </p>
+          </div>
+        
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+
+<!--Audio note-->
+
+<div data-role="page" id="aNote" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back"data-theme = "a">
+          <header>
+          <h1>Audio Notes</h1>
+          </header>
+          
+<div data-role="content" data-theme="a">
+
+
+<p id="media">Recording audio...</p>
+    <p id="audio_position"></p>
+    </div>
+    <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+      
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+<!--digital note-->
+<div data-role="page" id="dNote" data-add-back-btn="true" data-back-btn-theme="a" data-back-btn-text="Back"data-theme = "a">
+  <div data-role="header">
+    <h1>Digital Notes</h1>
+  </div>
+  <div data-role="content" data-theme = "a">
+
+<button onclick="capturePhoto();">Capture Photo</button> <br>
+    <button onclick="capturePhotoEdit();">Capture Editable Photo</button> <br>
+    <button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo Library</button><br>
+    <button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From Photo Album</button><br>
+    <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+    <img style="display:none;" id="largeImage" src="" />
+    
+    </div>
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li> <a href="#main">Home</a></li>
+        <li> <a href="#https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank">University Website</a></li>
+      </ul>
+    </div>
+    <h4><a href="https://infonet.glos.ac.uk/student/Pages/default.aspx" rel="external" target = "_blank"><img src="images/UOG.png" width="200" height="50" alt="University of Gloucestershire" /></a></h4>
+  </div>
+</div>
+
+</body>
+</html>
